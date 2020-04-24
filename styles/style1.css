@@ -1,0 +1,27 @@
+@font-face {
+font-family: "youmurdererbb_reg";
+src: url("fonts/youmurdererbb_reg.ttf");
+}
+
+.demo {
+    width: 100px;
+    height: 100px;
+    background-color: gray;
+    display: inline-block;
+    margin: 10;
+}
+h1 {
+font-family: youmurdererbb_reg, Arial, sans-serif;
+font-weight: normal;
+font-style: normal;
+font-size: 500%;
+color: darkred;
+}
+
+.h3 {
+font-family: youmurdererbb_reg, Arial, sans-serif;
+font-weight: normal;
+font-style: normal;
+font-size: 200%;
+color: darkred;
+}

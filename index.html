@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>VirusSlayer</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="styles/style1.css">
+    <link rel="stylesheet" href="styles/bootstrap-grid.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="vue.js"></script>
+  </head>
+  <body>  
+<div id="app">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto"> <h1>{{title}}</h1> </div>
+  </div>
+
+  <div v-if="show" class="row justify-content-md-center">
+    <div class="col-md-auto"> Choose a name: 
+      <input type="text" v-model="name" 
+      @keydown.enter="show = !show" > </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto"> <h1> <p class="h1">{{output}}</p> </h1> </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto"> </div>
+    <div class="col-md-auto"> <button v-if="isNew" @click="startGame">Start New Game</button></div>
+    <div class="col-md-auto"> </div>
+  </div>
+  
+  <div v-if="!isNew" class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-md-auto"> <button  @click="attack">Attack</button> </div>
+      <div class="col col-lg-2"></div>
+      <div class="col-md-auto"> <button  @click="giveUp">Give up</button> </div>
+    </div>
+  </div>
+ 
+  <div class="container"> 
+    <div class="row justify-content-md-center">
+      <div class="col col-lg-2"></div>
+      <div class="col-sm">
+        <h3><span class="h3">Vicious V</span>  Points: {{Math.round(virusWidth)}}</h3>     
+        <img :src="virusPicture" :style="vStyle" alt="" >    
+        <p style="font-size: small">Image by <a href="https://pixabay.com/users/15922088-15922088/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012321">15922088</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=5012321">Pixabay</a>
+        </p>
+      </div>
+      <div class="col-sm">
+        <h3><span class="h3">{{name}}</span>  Points: {{Math.round(meWidth)}}</h3>        
+        <img :src="mePicture" :style="myStyle" alt="">
+        <p style="font-size: small">Image by</span> <a href="https://pixabay.com/users/OpenClipart-Vectors-30363/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=152817">OpenClipart-Vectors</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=152817">Pixabay</a>
+        </p>
+      </div>    
+    </div>
+  </div>
+  
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <ul>
+        <li v-for="(stat, index) in stats">{{stat}}</li>
+      </ul>
+    </div> 
+  </div>
+
+</div>
+
+<script>
+new Vue({
+el: '#app',
+data: {
+  title: 'VIRUS SLAYER',
+  show: true,
+  mePicture: 'pictures/kickboxing-152817_640.png',
+  virusPicture: 'pictures/corona-5012321_640.jpg',
+  isNew: true,
+  name: 'Me',
+  virusWidth: '100',
+  meWidth: '100',
+  virusAttack: [],
+  stats: ["Attack by:"]
+},
+computed: {
+  output() {
+    return (this.meWidth < 5? 'GAME OVER' : '') || (this.virusWidth < 5 ? 'YOU WIN!!' : '')
+  },
+  myStyle() {
+    return {
+      backgroundColor: this.color,
+      width: this.meWidth + 'px'
+    }    
+  },
+  vStyle() {
+    return {
+      backgroundColor: this.color,
+      width: this.virusWidth + 'px'
+    }
+  },
+},
+watch: {
+  meWidth: function() {
+    var zeroOrOne = this.stats.length >= 10 ? 1 : 0;
+    this.stats.splice(1, zeroOrOne, this.name + ": " + Math.round(this.meWidth)); 
+
+    if(this.meWidth < 5){
+      clearInterval(this.virusAttack);
+      this.isNew = true;      
+    }
+  },
+  virusWidth: function() {
+    var zeroOrOne = this.stats.length >= 10 ? 1 : 0;
+    this.stats.splice(1, zeroOrOne, "Vicious V: " + Math.round(this.virusWidth));
+
+    if(this.virusWidth < 5){
+      clearInterval(this.virusAttack);
+      this.isNew = true;
+    }
+  }
+},
+methods: {
+  attack() {
+    if(this.meWidth > 5) {
+      this.virusWidth = this.virusWidth - Math.random()*10;
+      this.meWidth = this.meWidth -  Math.random()*3;
+    }
+  },
+  giveUp() {
+    this.meWidth = '100';
+    this.virusWidth = '100';
+    this.isNew = true;
+    clearInterval(this.virusAttack);
+  },
+  startGame() {  
+    this.stats = ["Attack by:"]    
+    this.meWidth = '100';
+    this.virusWidth = '100'; 
+    this.isNew = false;
+    var vm = this;
+    this.virusAttack = setInterval(function() {
+      vm.meWidth = vm.meWidth - Math.random()*10;
+    }, 1000); 
+  }
+}
+});
+</script>
+
+  </body>
+</html>
